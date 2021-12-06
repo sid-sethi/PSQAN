@@ -1,0 +1,33 @@
+## General pipeline parameters:
+
+# working directory:
+workdir: "/tmp_mnt/filer1/bioinformatics/Sid/PacBio_test/Post"
+
+# prefix of all output files
+sample_name: "SNCA_iPSC"
+
+# sqanti "classification.txt" file
+sqanti_class: "/tmp_mnt/filer1/bioinformatics/Sid/PacBio_test/SNCA_iPSC_classification.txt"
+
+# sqanti corrected.fasta file
+sqanti_fasta: "/tmp_mnt/filer1/bioinformatics/Sid/PacBio_test/SNCA_iPSC_corrected.fasta"
+
+# gene of interest (optional)
+# leave as empty string ("") if not using
+# multiple genes can be input separated by ";"
+gene_ids: "ENSG00000145335.17"
+#gene_ids: ""
+
+######################################################
+# transcript thresholds for filtering
+# only transcripts with >= thresholds will be retained
+######################################################
+
+# threshold of "mean of normalised expression across samples"; default = 0.3
+NE: 0.3
+
+# threshold of "normalised expression per sample"; default = 0
+NFLR: 0
+
+# minimum number of samples (%) which should pass NFLR threshold; default = 0
+min_sample_perc: 8

@@ -1,0 +1,13 @@
+name: psqan
+channels:
+ - conda-forge
+ - bioconda
+ - defaults
+dependencies:
+ - snakemake==5.32.2
+ - r-base=4.0.3
+ - r-tidyverse
+ - r-RColorBrewer
+ - bioconductor-Biostrings
+ - bioconductor-ORFik
+ - r-matrixStats
