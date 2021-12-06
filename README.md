@@ -12,7 +12,7 @@
 PSQAN is a `snakemake` pipeline for performing post Sqanti QC analysis on Pacbio sequencing data.
 
 <p align="center">
-  <img src="dag/dag.png" width="300" height="400"/>  
+  <img src="dag/dag.png" width="500" height="300"/>  
 </p>
 
 
