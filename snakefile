@@ -1,18 +1,25 @@
 import os
 from os import path
 
+from snakemake.utils import validate
 from snakemake.utils import min_version
 min_version("5.3")
 
 # ----------------------------------------------------------------
 
-configfile: "config.yml"
+SNAKEDIR = path.dirname(workflow.snakefile)
+
+configfile: SNAKEDIR + "/config.yml"
+validate(config, schema="schema/config_schema.yaml")
+
 workdir: config["workdir"]
 
 WORKDIR = config["workdir"]
-SNAKEDIR = path.dirname(workflow.snakefile)
-
 sample = config["sample_name"]
+
+report: "report/workflow.rst"
+
+plot_group = ["main", "perSample"] if config["multisample"] == "yes" else ["main"]
 
 
 # ----------------------------------------------------------------
@@ -21,24 +28,18 @@ sample = config["sample_name"]
 rule all:
     input:
         # transcripts detected curves
-        "Post_sqanti_qc/" + sample + "_transcriptsNE_curve.png",
-        "Post_sqanti_qc/" + sample + "_transcriptsNFLR_perSample_curve.png",
+        expand("Post_sqanti_qc/" + sample + "_NFLR_curve_{name}.png", name=plot_group),
 
         # transcript categories - pre filtering
-        "Post_sqanti_qc/" + sample + "_preFilt_tc_count_withSd.png",
-        "Post_sqanti_qc/" + sample + "_preFilt_tc_count.png",
-        "Post_sqanti_qc/" + sample + "_preFilt_tc_NFLR.png",
-        "Post_sqanti_qc/" + sample + "_preFilt_tc_NE.png",
+        expand("Post_sqanti_qc/" + sample + "_preFilt_tc_count_{name}.png", name=plot_group),
+        expand("Post_sqanti_qc/" + sample + "_preFilt_tc_NFLR_{name}.png", name=plot_group),
 
         # transcript categories - post filtering
-        "Post_sqanti_qc/" + sample + "_postFilt_tc_count_withSd.png",
-        "Post_sqanti_qc/" + sample + "_postFilt_tc_count.png",
-        "Post_sqanti_qc/" + sample + "_postFilt_tc_NFLR.png",
-        "Post_sqanti_qc/" + sample + "_postFilt_tc_NE.png",
+        expand("Post_sqanti_qc/" + sample + "_postFilt_tc_count_{name}.png", name=plot_group),
+        expand("Post_sqanti_qc/" + sample + "_postFilt_tc_NFLR_{name}.png", name=plot_group),
 
         # transcripts ranked
-        "Post_sqanti_qc/" + sample + "_postFilt_transcriptsRanked_withSd.png",
-        "Post_sqanti_qc/" + sample + "_postFilt_transcriptsRanked.png"
+        expand("Post_sqanti_qc/" + sample + "_postFilt_transcriptsRanked_{name}.png", name=plot_group)
 
 #########################################################################
 
@@ -54,7 +55,7 @@ rule process_sqanti_results:
     params:
         respath = "Post_sqanti_qc",
         prefix = sample,
-        gene_ids = config.get("gene_ids", ""),
+        gene_ids = config["gene_ids"],
         script = SNAKEDIR + "/scripts/process_sqanti_results.R"
 
     shell:
@@ -69,8 +70,8 @@ rule transcripts_detected_curve:
         sqanti_class = rules.process_sqanti_results.output.res
 
     output:
-        p1 = "Post_sqanti_qc/" + sample + "_transcriptsNE_curve.png",
-        p2 = "Post_sqanti_qc/" + sample + "_transcriptsNFLR_perSample_curve.png"
+        p1 = report(expand("Post_sqanti_qc/" + sample + "_NFLR_curve_{name}.png", name=plot_group), caption = "report/NFLR_curve.rst", category = "Pre-filtering", subcategory = "Transcripts detected vs. expression")
+
 
     params:
         respath = "Post_sqanti_qc",
@@ -89,10 +90,9 @@ rule transcript_category_preFilt:
         sqanti_class = rules.process_sqanti_results.output.res
 
     output:
-        p1 = "Post_sqanti_qc/" + sample + "_preFilt_tc_count_withSd.png",
-        p2 = "Post_sqanti_qc/" + sample + "_preFilt_tc_count.png",
-        p3 = "Post_sqanti_qc/" + sample + "_preFilt_tc_NFLR.png",
-        p4 = "Post_sqanti_qc/" + sample + "_preFilt_tc_NE.png"
+        p1 = report(expand("Post_sqanti_qc/" + sample + "_preFilt_tc_count_{name}.png", name=plot_group), caption = "report/tc_count.rst", category = "Pre-filtering", subcategory = "Transcript categories"),
+        p3 = report(expand("Post_sqanti_qc/" + sample + "_preFilt_tc_NFLR_{name}.png", name=plot_group), caption = "report/tc_NFLR.rst", category = "Pre-filtering", subcategory = "Transcript categories")
+
 
     params:
         respath = "Post_sqanti_qc",
@@ -114,9 +114,9 @@ rule filter_sqanti_results:
         res = "Post_sqanti_qc/" + sample + "_classification_filtered.txt"
 
     params:
-        NE = config["NE"] if config.get("NE") else 0.3,
-        NFLR = config["NFLR"] if config.get("NE") else 0,
-        min_sample_perc = config["min_sample_perc"] if config.get("NE") else 0,
+        NE = config["NFLR_mean"],
+        NFLR = config["NFLR_perSample"],
+        min_sample_perc = config["min_sample_perc"],
         respath = "Post_sqanti_qc",
         prefix = sample,
         script = SNAKEDIR + "/scripts/filter_sqanti_results.R"
@@ -132,10 +132,9 @@ rule transcript_category_postFilt:
         sqanti_class = rules.filter_sqanti_results.output.res
 
     output:
-        p1 = "Post_sqanti_qc/" + sample + "_postFilt_tc_count_withSd.png",
-        p2 = "Post_sqanti_qc/" + sample + "_postFilt_tc_count.png",
-        p3 = "Post_sqanti_qc/" + sample + "_postFilt_tc_NFLR.png",
-        p4 = "Post_sqanti_qc/" + sample + "_postFilt_tc_NE.png"
+        p1 = report(expand("Post_sqanti_qc/" + sample + "_postFilt_tc_count_{name}.png", name=plot_group), caption = "report/tc_count.rst", category = "Post-filtering", subcategory = "Transcript categories"),
+        p3 = report(expand("Post_sqanti_qc/" + sample + "_postFilt_tc_NFLR_{name}.png", name=plot_group), caption = "report/tc_NFLR.rst", category = "Post-filtering", subcategory = "Transcript categories")
+
 
     params:
         respath = "Post_sqanti_qc",
@@ -154,8 +153,8 @@ rule transcripts_ranked:
         sqanti_class = rules.filter_sqanti_results.output.res
 
     output:
-        p1 = "Post_sqanti_qc/" + sample + "_postFilt_transcriptsRanked_withSd.png",
-        p2 = "Post_sqanti_qc/" + sample + "_postFilt_transcriptsRanked.png"
+        p1 = report(expand("Post_sqanti_qc/" + sample + "_postFilt_transcriptsRanked_{name}.png", name=plot_group), caption = "report/transcriptsRanked.rst", category = "Post-filtering", subcategory = "Transcripts ranked")
+
 
     params:
         respath = "Post_sqanti_qc",

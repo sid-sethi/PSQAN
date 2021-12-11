@@ -59,6 +59,10 @@ It is a good idea to do a dry run (using -n parameter) to view what would be don
 ```bash
 snakemake --use-conda -n all
 ```
+After the snakemake process runs succesfully, you can build a html report
+```bash
+snakemake --report <report_name>.html
+```
 
 You can visualise the processes to be executed in a DAG:
 

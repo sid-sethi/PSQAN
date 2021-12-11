@@ -13,10 +13,17 @@ sqanti_fasta <- args[2] # sqanti corrected.fasta file
 prefix <- args[3]
 outpath <- args[4]
 gene_id <- args[5] # multiple genes can be input separated by ";"
+run_orfik <- "yes" 
 
 
 x = read.table(sqanti_class, header=TRUE, sep="\t") %>%
   dplyr::filter(perc_A_downstream_TTS <= 80, RTS_stage %in% "FALSE")
+
+
+n_samples <- x %>%
+  dplyr:::select(starts_with("FL")) %>% 
+  ncol()
+  
 
 
 # select data for gene of interest
@@ -32,10 +39,6 @@ if(!is.na(gene_id)) {
   x.gene <- x
 }
 
-
-
-# # adding mean FL counts
- x.gene$FL_mean = x.gene %>% dplyr::select(starts_with("FL.")) %>% rowMeans()
 
 
 #####################################################################
@@ -81,42 +84,44 @@ x.gene <- x.gene %>%
 ################ ORF prediction using ORFik ###############
 ###########################################################
 
-seqs <- Biostrings::readDNAStringSet(sqanti_fasta, format = "fasta")
+if(run_orfik == "yes"){
 
-# filter non-gene related transcripts
-seqs <- seqs[x.gene$isoform]
+  seqs <- Biostrings::readDNAStringSet(sqanti_fasta, format = "fasta")
+  
+  # filter non-gene related transcripts
+  seqs <- seqs[x.gene$isoform]
+  
+  orfs.gr <- ORFik::findORFs(seqs, longestORF = TRUE, startCodon = "ATG") %>%
+    unlist(., use.names = TRUE) %>%
+    as.data.frame() %>%
+    mutate(seqnames = names(seqs)[as.integer(.$names)]) %>%
+    group_by(seqnames) %>%
+    slice_max(width, n=1, with_ties=FALSE) %>%
+    makeGRangesFromDataFrame(., keep.extra.columns = TRUE)
+  
+  
+  orfs.cds <- getSeq(seqs, orfs.gr)
+  names(orfs.cds) <- seqnames(orfs.gr)
+  orfs.aa <- Biostrings::translate(orfs.cds)
+  
+  
+  cds.df <- orfs.cds %>%
+    as.data.frame() %>%
+    rownames_to_column("isoform") %>%
+    plyr::rename(c("x" = "ORFik_cds"))
+  
+  
+  aa.df <- orfs.aa %>%
+    as.data.frame() %>%
+    rownames_to_column("isoform") %>%
+    plyr::rename(c("x" = "ORFik_aa"))
+  
+  
+  x.gene <- x.gene %>%
+    dplyr::left_join(cds.df, by = "isoform") %>%
+    dplyr::left_join(aa.df, by = "isoform")
 
-orfs.gr <- ORFik::findORFs(seqs, longestORF = TRUE, startCodon = "ATG") %>%
-  unlist(., use.names = TRUE) %>%
-  as.data.frame() %>%
-  mutate(seqnames = names(seqs)[as.integer(.$names)]) %>%
-  group_by(seqnames) %>%
-  slice_max(width, n=1, with_ties=FALSE) %>%
-  makeGRangesFromDataFrame(., keep.extra.columns = TRUE)
-
-
-orfs.cds <- getSeq(seqs, orfs.gr)
-names(orfs.cds) <- seqnames(orfs.gr)
-orfs.aa <- Biostrings::translate(orfs.cds)
-
-
-cds.df <- orfs.cds %>%
-  as.data.frame() %>%
-  rownames_to_column("isoform") %>%
-  plyr::rename(c("x" = "ORFik_cds"))
-
-
-aa.df <- orfs.aa %>%
-  as.data.frame() %>%
-  rownames_to_column("isoform") %>%
-  plyr::rename(c("x" = "ORFik_aa"))
-
-
-x.gene <- x.gene %>%
-  dplyr::left_join(cds.df, by = "isoform") %>%
-  dplyr::left_join(aa.df, by = "isoform")
-
-
+}
 
 
 ###########################################################
@@ -125,16 +130,30 @@ x.gene <- x.gene %>%
 
 # normalise FLR per transcript per sample
 
-x.norm <- x.gene %>%
-  dplyr:::select(starts_with("FL.")) %>%
-  mutate_at(vars(starts_with("FL.")), ~./sum(.)*100) %>%
-  dplyr::rename_with(~str_replace(., "FL", "NFLR"))
+
+if(n_samples > 1) {
+  
+  # # adding mean FL counts
+  x.gene$FL_mean = x.gene %>% dplyr::select(starts_with("FL.")) %>% rowMeans()
+  
+  x.norm <- x.gene %>%
+    dplyr:::select(starts_with("FL.")) %>%
+    mutate_at(vars(starts_with("FL.")), ~./sum(.)*100) %>%
+    dplyr::rename_with(~str_replace(., "FL", "NFLR"))
+  
+  # normalised expression per transcript across all samples; NFLR(T) = mean(NFLR)
+  x.norm$NFLR_mean = rowMeans(x.norm)
+  
+}else{
+  x.norm <- x.gene %>%
+    dplyr:::select(FL) %>%
+    mutate_at(vars(starts_with("FL")), ~./sum(.)*100) %>%
+    dplyr::rename_with(~str_replace(., "FL", "NFLR"))
+}
+
+
 
 x.gene <- bind_cols(x.gene, x.norm)
-
-# normalised expression per transcript across all samples; NE = mean(NFLR)
-
-x.gene$NE = x.gene %>% dplyr::select(starts_with("NFLR.")) %>% rowMeans()
 
 
 write.table(x.gene, str_c(outpath, "/", prefix, "_classification_processed.txt"), col.names = TRUE, row.names=FALSE, sep="\t", quote = FALSE)
