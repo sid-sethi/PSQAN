@@ -1,16 +1,16 @@
 ## General pipeline parameters:
 
 # working directory (required; cannot be an empty string)
-workdir: "/tmp_mnt/filer1/bioinformatics/Sid/PacBio_test/Post"
+workdir: "/media/data/Sid/Encode_LR/astrocyte_ENCSR071IHY/SNCA"
 
 # prefix of all output files (required; cannot be an empty string)
-sample_name: "SNCA_iPSC"
+sample_name: "SNCA"
 
 # sqanti "classification.txt" file (required)
-sqanti_class: "/tmp_mnt/filer1/bioinformatics/Sid/PacBio_test/SNCA_iPSC_classification.txt"
+sqanti_class: "/media/data/Sid/Encode_LR/astrocyte_ENCSR071IHY/Sqanti/astrocyte_ENCSR071IHY_classification.txt"
 
 # sqanti corrected.fasta file (required)
-sqanti_fasta: "/tmp_mnt/filer1/bioinformatics/Sid/PacBio_test/SNCA_iPSC_corrected.fasta"
+sqanti_fasta: "/media/data/Sid/Encode_LR/astrocyte_ENCSR071IHY/Sqanti/astrocyte_ENCSR071IHY_corrected.fasta"
 
 # gene of interest (optional)
 # leave as empty string ("") if not using
@@ -23,10 +23,10 @@ gene_ids: "ENSG00000145335.17"
 ######################################################
 
 # does your sqanti file has abundences of more than one sample?
-multisample: "yes"
+multisample: "no"
 
 # threshold of NFLR (if one sample) or NFLR_mean across samples (if multisample); default = 0.3
-NFLR_mean: 0.3
+NFLR_mean: 0.1
 
 # threshold of "normalised expression per sample"; default = 0
 # Not used if only one sample
@@ -34,4 +34,4 @@ NFLR_perSample: 0
 
 # minimum number of samples (%) which should pass NFLR threshold; default = 0
 # Not used if only one sample
-min_sample_perc: 8
+min_sample_perc: 0

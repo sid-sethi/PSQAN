@@ -1,5 +1,7 @@
 args <- commandArgs(TRUE)
 
+options(warn=-1)
+
 suppressPackageStartupMessages({
   library(tidyverse)
 })

@@ -10,4 +10,5 @@ dependencies:
  - r-RColorBrewer
  - bioconductor-Biostrings
  - bioconductor-ORFik
+ - bioconductor-BSgenome
  - r-matrixStats

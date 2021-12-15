@@ -60,7 +60,7 @@ rule process_sqanti_results:
 
     shell:
         """
-        /software/R_v4.0.3/bin/Rscript {params.script} {input.sqanti_class} {input.sqanti_fasta} {params.prefix} {params.respath} {params.gene_ids}
+        Rscript {params.script} {input.sqanti_class} {input.sqanti_fasta} {params.prefix} {params.respath} {params.gene_ids}
         """
 
 
@@ -80,7 +80,7 @@ rule transcripts_detected_curve:
 
     shell:
         """
-        /software/R_v4.0.3/bin/Rscript {params.script} {input.sqanti_class} {params.prefix} {params.respath}
+        Rscript {params.script} {input.sqanti_class} {params.prefix} {params.respath}
         """
 
 
@@ -101,7 +101,7 @@ rule transcript_category_preFilt:
 
     shell:
         """
-        /software/R_v4.0.3/bin/Rscript {params.script} {input.sqanti_class} {params.prefix} {params.respath}
+        Rscript {params.script} {input.sqanti_class} {params.prefix} {params.respath}
         """
 
 
@@ -123,7 +123,7 @@ rule filter_sqanti_results:
 
     shell:
         """
-        /software/R_v4.0.3/bin/Rscript {params.script} {input.sqanti_class} {params.prefix} {params.respath} {params.NE} {params.NFLR} {params.min_sample_perc}
+        Rscript {params.script} {input.sqanti_class} {params.prefix} {params.respath} {params.NE} {params.NFLR} {params.min_sample_perc}
         """
 
 
@@ -143,7 +143,7 @@ rule transcript_category_postFilt:
 
     shell:
         """
-        /software/R_v4.0.3/bin/Rscript {params.script} {input.sqanti_class} {params.prefix} {params.respath}
+        Rscript {params.script} {input.sqanti_class} {params.prefix} {params.respath}
         """
 
 
@@ -163,5 +163,5 @@ rule transcripts_ranked:
 
     shell:
         """
-        /software/R_v4.0.3/bin/Rscript {params.script} {input.sqanti_class} {params.prefix} {params.respath}
+        Rscript {params.script} {input.sqanti_class} {params.prefix} {params.respath}
         """

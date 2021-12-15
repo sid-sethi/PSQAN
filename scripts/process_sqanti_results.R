@@ -1,10 +1,13 @@
 args <- commandArgs(TRUE)
 
+options(warn=-1)
+
 suppressPackageStartupMessages({
   library(tidyverse)
   library(matrixStats)
   library(ORFik)
   library(Biostrings)
+  library(BSgenome)
 })
 
 
@@ -13,17 +16,25 @@ sqanti_fasta <- args[2] # sqanti corrected.fasta file
 prefix <- args[3]
 outpath <- args[4]
 gene_id <- args[5] # multiple genes can be input separated by ";"
-run_orfik <- "yes" 
+run_orfik <- "yes"
 
 
 x = read.table(sqanti_class, header=TRUE, sep="\t") %>%
   dplyr::filter(perc_A_downstream_TTS <= 80, RTS_stage %in% "FALSE")
 
 
+if(nrow(x) == 0){
+  cat("Either input Sqanti file has 0 rows, OR 0 rows were returned after removing technical replicates with the below criteria:\n
+  perc_A_downstream_TTS <= 80, RTS_stage == FALSE\n
+  Exiting...............\n\n")
+  quit()
+}
+
+
 n_samples <- x %>%
-  dplyr:::select(starts_with("FL")) %>% 
+  dplyr:::select(starts_with("FL")) %>%
   ncol()
-  
+
 
 
 # select data for gene of interest
@@ -37,6 +48,14 @@ if(!is.na(gene_id)) {
   }
 }else{
   x.gene <- x
+}
+
+
+if(nrow(x.gene) == 0){
+  cat(str_c("0 rows were returned after selecting for genes of interest\n",
+  "No data found for: ", gene_id,
+  "\nExiting...............\n\n"))
+  quit()
 }
 
 
@@ -67,13 +86,18 @@ x.gene <- x.gene %>%
       predicted_NMD == "FALSE" &
         structural_category != "full-splice_match" ~ "Coding novel",
 
+      #is.na(predicted_NMD) &
+      #  structural_category != "full-splice_match" ~ "Coding novel",
+
       predicted_NMD == "FALSE" &
         structural_category == "full-splice_match" &
         subcategory == "reference_match" ~ "Coding known (complete match)",
 
       predicted_NMD == "FALSE" &
         structural_category == "full-splice_match" &
-        subcategory != "reference_match" ~ "Coding known (alternate 3'/5' end)"
+        subcategory %in% c("alternative_3end", "alternative_3end5end", "alternative_5end") ~ "Coding known (alternate 3'/5' end)",
+
+      TRUE ~ "Other"
 
     )
   )
@@ -87,10 +111,10 @@ x.gene <- x.gene %>%
 if(run_orfik == "yes"){
 
   seqs <- Biostrings::readDNAStringSet(sqanti_fasta, format = "fasta")
-  
+
   # filter non-gene related transcripts
   seqs <- seqs[x.gene$isoform]
-  
+
   orfs.gr <- ORFik::findORFs(seqs, longestORF = TRUE, startCodon = "ATG") %>%
     unlist(., use.names = TRUE) %>%
     as.data.frame() %>%
@@ -98,25 +122,25 @@ if(run_orfik == "yes"){
     group_by(seqnames) %>%
     slice_max(width, n=1, with_ties=FALSE) %>%
     makeGRangesFromDataFrame(., keep.extra.columns = TRUE)
-  
-  
+
+
   orfs.cds <- getSeq(seqs, orfs.gr)
   names(orfs.cds) <- seqnames(orfs.gr)
   orfs.aa <- Biostrings::translate(orfs.cds)
-  
-  
+
+
   cds.df <- orfs.cds %>%
     as.data.frame() %>%
     rownames_to_column("isoform") %>%
     plyr::rename(c("x" = "ORFik_cds"))
-  
-  
+
+
   aa.df <- orfs.aa %>%
     as.data.frame() %>%
     rownames_to_column("isoform") %>%
     plyr::rename(c("x" = "ORFik_aa"))
-  
-  
+
+
   x.gene <- x.gene %>%
     dplyr::left_join(cds.df, by = "isoform") %>%
     dplyr::left_join(aa.df, by = "isoform")
@@ -132,18 +156,20 @@ if(run_orfik == "yes"){
 
 
 if(n_samples > 1) {
-  
+
   # # adding mean FL counts
   x.gene$FL_mean = x.gene %>% dplyr::select(starts_with("FL.")) %>% rowMeans()
-  
+
   x.norm <- x.gene %>%
     dplyr:::select(starts_with("FL.")) %>%
     mutate_at(vars(starts_with("FL.")), ~./sum(.)*100) %>%
     dplyr::rename_with(~str_replace(., "FL", "NFLR"))
-  
+
+  x.norm[is.na(x.norm)] <- 0
+
   # normalised expression per transcript across all samples; NFLR(T) = mean(NFLR)
   x.norm$NFLR_mean = rowMeans(x.norm)
-  
+
 }else{
   x.norm <- x.gene %>%
     dplyr:::select(FL) %>%

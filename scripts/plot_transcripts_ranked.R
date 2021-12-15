@@ -1,5 +1,7 @@
 args <- commandArgs(TRUE)
 
+options(warn=-1)
+
 suppressPackageStartupMessages({
   library(tidyverse)
   library(RColorBrewer)
@@ -39,7 +41,7 @@ if(nrow(x.gene) == 0){
 
 
 n_samples <- x.gene %>%
-  dplyr:::select(starts_with("FL")) %>% 
+  dplyr:::select(starts_with("FL")) %>%
   ncol()
 
 x.gene$Isoform_class <- forcats::fct_recode(x.gene$Isoform_class, "Coding known\n(complete match)" = "Coding known (complete match)", "Coding known\n(alternate 3'/5' end)" = "Coding known (alternate 3/5 end)")
@@ -49,7 +51,7 @@ x.gene$Isoform_class <- forcats::fct_recode(x.gene$Isoform_class, "Coding known\
 #### Transcripts (ranked) vs. NFLR ######
 
 if(n_samples > 1){
-  
+
   ## with error bars #####
   x.ranked <- x.gene %>%
     dplyr::select(isoform, Isoform_class, starts_with("NFLR.")) %>%
@@ -58,8 +60,8 @@ if(n_samples > 1){
     summarise(NFLR_mean = mean(NFLR), NFLR_sd = sd(NFLR), .groups = "keep") %>%
     arrange(desc(NFLR_mean)) %>%
     tibble::rowid_to_column(., "isoform_index")
-  
-  
+
+
   p1 <- ggplot(data=x.ranked, aes(x=isoform_index, fill = Isoform_class)) +
     geom_bar(aes(y = NFLR_mean), color=NA, size=0.3, width=0.8, stat="identity") +
     geom_errorbar(aes(ymin = NFLR_mean-NFLR_sd, ymax = NFLR_mean+NFLR_sd), width = 0.2) +
@@ -73,16 +75,16 @@ if(n_samples > 1){
       axis.line = element_line(color = "black", size=0.4),
       legend.position = c(0.80, 0.80)
     )
-  
+
   png(str_c(outpath, "/", prefix, "_transcriptsRanked_perSample.png"), bg="transparent",units="in",width = 4.25, height= 3.75 ,res=600)
   plot(p1)
   dev.off()
-  
-  
+
+
 }else{
-  
+
   x.gene$NFLR_mean <- x.gene$NFLR
-  
+
 }
 
 
