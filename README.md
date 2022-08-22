@@ -36,11 +36,11 @@ Following transcript characterisation from SQANTI, PSQAN applies a set of filter
 - Coding known (complete match) - if predicted to be coding & not NMD, and a full-splice & UTR match with the reference
 - Coding known (alternate 3'/5' end) - if predicted to be coding & not NMD, and a full-splice match with the reference but with an alternate 3’ end, 5’ end or both 3’ and 5’ end.
 
-Additionally, PSQAN also performs ORF prediction using the package ORFik. However, these results are not used fortranscript categorisation.
+Additionally, PSQAN also performs ORF prediction using the R package `ORFik`. However, these results are not used for transcript categorisation.
 
-# Normalisation
+### Normalisation
 
-Given a transcript T in sample i with FLR as the number of full-length reads mapped to the transcript T, we calculated the normalised full-length reads (〖NFLR〗_Ti) as the percentage of total transcription in the sample:
+Given a transcript *T* in sample *i* with *FLR* as the number of full-length reads mapped to the transcript *T*, PSQAN calculates the normalised full-length reads (*NFLR<sub>Ti</sub>*s) as the percentage of total transcription in the sample:
 〖NFLR〗_Ti=  〖FLR〗_Ti/(∑_(T=1)^M▒〖FLR〗_Ti )  ×100
 where, 〖NFLR〗_Ti represents the normalised full-length read count of transcript T in sample i, 〖FLR〗_Ti is the full-length read count of transcript T in sample i and M is the total number of transcripts identified to be associated with the gene after filtering. Finally, to summarise the expression of a transcript associated with a gene, we calculated the mean of normalised full-length reads (〖NFLR〗_Ti) across all the samples:
 〖NFLR〗_T=  (∑_(i=1)^N▒〖NFLR〗_Ti )/N
