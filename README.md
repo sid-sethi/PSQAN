@@ -9,7 +9,7 @@
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/sid-sethi/APTARS/blob/main/LICENSE)
 <!-- badges: end -->
 
-PSQAN is a `snakemake` pipeline for performing post Sqanti QC analysis on Pacbio sequencing data.
+PSQAN is a `snakemake` pipeline for performing post Sqanti QC analysis on Pacbio sequencing data. PSQAN can be used to explore the transcript categories and expression associated with a gene. PSQAN filters transcripts which could be possible arteficts, normalises expression and generates multiple visualisations which can help in determining optimal expression thresholds to identify genuine transcripts (known/novel). Below is the dag of the pipeline:
 
 <p align="center">
   <img src="dag/dag.png" width="500" height="300"/>  
@@ -22,7 +22,30 @@ PSQAN is a `snakemake` pipeline for performing post Sqanti QC analysis on Pacbio
 
 - Sqanti _classification.txt file
 - Sqanti _corrected.fasta file
-- Gene of interest (optional)
+- Gene of interest (Recommended, but optional)
+
+
+## Output
+
+Following transcript characterisation from SQANTI, PSQAN applies a set of filtering criteria to remove potential genomic contamination and rare PCR artifacts. PSQAN removes an isoform if: (1) the percent of genomic "A"s in the downstream 20 bp window is more than 80% (“perc_A_downstream_TTS” > 80); (2) one of the junctions is predicted to be template switching artifact (“RTS_stage” = TRUE); or (3) it is not associated with the gene of interest. Using SQANTI’s output of ORF prediction, NMD prediction and structural categorisation based on comparison with the reference annotation, PSQAN groups the identified isoforms into the following categories:
+- Non-coding novel - if predicted to be non-coding and not a full-splice match with the reference
+- Non-coding known - if predicted to be non-coding and a full-splice match with the reference
+- NMD novel - if predicted to be coding & NMD, and not a full-splice match with the reference
+- NMD known - if predicted to be coding & NMD, and a full-splice match with the reference
+- Coding novel - if predicted to be coding & not NMD, and not a full-splice match with the reference
+- Coding known (complete match) - if predicted to be coding & not NMD, and a full-splice & UTR match with the reference
+- Coding known (alternate 3'/5' end) - if predicted to be coding & not NMD, and a full-splice match with the reference but with an alternate 3’ end, 5’ end or both 3’ and 5’ end.
+
+Additionally, PSQAN also performs ORF prediction using the package ORFik. However, these results are not used fortranscript categorisation.
+
+# Normalisation
+
+Given a transcript T in sample i with FLR as the number of full-length reads mapped to the transcript T, we calculated the normalised full-length reads (〖NFLR〗_Ti) as the percentage of total transcription in the sample:
+〖NFLR〗_Ti=  〖FLR〗_Ti/(∑_(T=1)^M▒〖FLR〗_Ti )  ×100
+where, 〖NFLR〗_Ti represents the normalised full-length read count of transcript T in sample i, 〖FLR〗_Ti is the full-length read count of transcript T in sample i and M is the total number of transcripts identified to be associated with the gene after filtering. Finally, to summarise the expression of a transcript associated with a gene, we calculated the mean of normalised full-length reads (〖NFLR〗_Ti) across all the samples:
+〖NFLR〗_T=  (∑_(i=1)^N▒〖NFLR〗_Ti )/N
+where, 〖NFLR〗_T represents the mean expression of transcript T across all samples and N is the total number of samples.
+
 
 
 ## Depedencies
