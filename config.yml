@@ -1,21 +1,21 @@
 ## General pipeline parameters:
 
 # working directory (required; cannot be an empty string)
-workdir: "/media/data/Sid/Encode_LR/astrocyte_ENCSR071IHY/SNCA"
+workdir: "PSQAN/test_output"
 
 # prefix of all output files (required; cannot be an empty string)
-sample_name: "SNCA"
+sample_name: "testData"
 
 # sqanti "classification.txt" file (required)
-sqanti_class: "/media/data/Sid/Encode_LR/astrocyte_ENCSR071IHY/Sqanti/astrocyte_ENCSR071IHY_classification.txt"
+sqanti_class: "PSQAN/test_data/sqanti_classification.txt"
 
 # sqanti corrected.fasta file (required)
-sqanti_fasta: "/media/data/Sid/Encode_LR/astrocyte_ENCSR071IHY/Sqanti/astrocyte_ENCSR071IHY_corrected.fasta"
+sqanti_fasta: "PSQAN/test_data/sqanti_corrected.fasta"
 
 # gene of interest (optional)
 # leave as empty string ("") if not using
-# multiple genes can be input separated by ";"
-gene_ids: "ENSG00000145335.17"
+# multiple genes can be input separated by ";", but it is recommended to use PSQAN with a single genes
+gene_ids: "ENSG00000TEST"
 
 ######################################################
 # transcript thresholds for filtering
@@ -23,10 +23,10 @@ gene_ids: "ENSG00000145335.17"
 ######################################################
 
 # does your sqanti file has abundences of more than one sample?
-multisample: "no"
+multisample: "yes"
 
 # threshold of NFLR (if one sample) or NFLR_mean across samples (if multisample); default = 0.3
-NFLR_mean: 0.1
+NFLR_mean: 0.3
 
 # threshold of "normalised expression per sample"; default = 0
 # Not used if only one sample
@@ -34,4 +34,4 @@ NFLR_perSample: 0
 
 # minimum number of samples (%) which should pass NFLR threshold; default = 0
 # Not used if only one sample
-min_sample_perc: 0
+min_sample_perc: 8
