@@ -52,9 +52,7 @@ where, *NFLR*<sub>*Ti*</sub> represents the normalised full-length read count of
   <img src="images/eq_2.jpg" width="300" height="75"/>  
 </p>
 
-where, *NFLR*<sub>*T*</sub> represents the mean expression of transcript *T* across all samples and *N* is the total number of samples.
-
-In order to calculate accurate normalisation, it is recommended to use PSQAN to analyse a single gene.
+where, *NFLR*<sub>*T*</sub> represents the mean expression of transcript *T* across all samples and *N* is the total number of samples. In order to calculate accurate normalisation, it is recommended to use PSQAN to analyse a single gene.
 
 ## Depedencies
 
