@@ -25,13 +25,13 @@ gene_ids: "ENSG00000TEST"
 # does your sqanti file has abundences of more than one sample?
 multisample: "yes"
 
-# threshold of NFLR (if one sample) or NFLR_mean across samples (if multisample); default = 0.3
+# threshold of NFLR (if one sample) or NFLR_mean (NFLR_T) across samples (if multisample); default = 0.3
 NFLR_mean: 0.3
 
-# threshold of "normalised expression per sample"; default = 0
+# threshold of "normalised expression per sample (NFLR_Ti)"; default = 0
 # Not used if only one sample
 NFLR_perSample: 0
 
-# minimum number of samples (%) which should pass NFLR threshold; default = 0
+# minimum number of samples (%) which should pass NFLR_Ti threshold; default = 0
 # Not used if only one sample
 min_sample_perc: 8
