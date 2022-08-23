@@ -38,7 +38,7 @@ Following transcript characterisation from SQANTI, PSQAN applies a set of filter
 
 Additionally, PSQAN also performs ORF prediction using the R package `ORFik`. However, these results are not used for transcript categorisation.
 
-### <ins>Normalisation</ins>
+### <ins>Expression normalisation</ins>
 
 Given a transcript *T* in sample *i* with *FLR* as the number of full-length reads mapped to the transcript *T*, PSQAN calculates the normalised full-length reads (*NFLR*<sub>*Ti*</sub>) as the percentage of total transcription in the sample:
 
@@ -78,6 +78,13 @@ where, *NFLR*<sub>*T*</sub> represents the mean expression of transcript *T* acr
 </p>
 
 
+### <ins>Filtering isoforms</ins>
+
+PSQAN can be first run with default filtering thresholds in order to generate pre-filtering visualisations. After exploring the pre-filtering visualisations, appropriate thresholds can be determined and PSQAN can be run again. PSQAN allows filtering of isoforms based on the following three values:
+- minimum overall expression (*NFLR*<sub>*T*</sub>) [default = 0.3]
+- minimum expression required per sample (*NFLR*<sub>*Ti*</sub>) [default = 0]. Not applicabale if data contains only one sample
+- minimum number of samples (in %) which should pass the *NFLR*<sub>*Ti*</sub> threshold [default = 0]. Not applicabale if data contains only one sample
+
 ## Depedencies
 
 - [miniconda](https://conda.io/miniconda.html)
@@ -100,7 +107,7 @@ conda env create -f environment.yml
 
 ## Usage
 
-Edit `config.yml` to set up the working directory and input files/directories. `snakemake` command should be issued from within the pipeline directory. Please note that before you run any of the `snakemake` commands, make sure to first activate the conda environment using the command `conda activate psqan`.
+Edit `config.yml` to set up the working directory, input files/directories and other required parameters. `snakemake` command should be issued from within the pipeline directory. Please note that before you run any of the `snakemake` commands, make sure to first activate the conda environment using the command `conda activate psqan`.
 
 ```bash
 cd PSQAN
