@@ -80,10 +80,34 @@ where, *NFLR*<sub>*T*</sub> represents the mean expression of transcript *T* acr
 
 ### <ins>Filtering isoforms</ins>
 
-PSQAN can be first run with default filtering thresholds in order to generate pre-filtering visualisations. After exploring the pre-filtering visualisations, appropriate thresholds can be determined and PSQAN can be run again. PSQAN allows filtering of isoforms based on the following three values:
+PSQAN can be first run with default filtering thresholds in order to generate pre-filtering visualisations. After exploring the pre-filtering visualisations, appropriate thresholds can be determined and PSQAN can be run again with appropriate thresholds. PSQAN allows filtering of isoforms based on the following three values:
 - minimum overall expression (*NFLR*<sub>*T*</sub>) [default = 0.3]
 - minimum expression required per sample (*NFLR*<sub>*Ti*</sub>) [default = 0]. Not applicabale if data contains only one sample
 - minimum number of samples (in %) which should pass the *NFLR*<sub>*Ti*</sub> threshold [default = 0]. Not applicabale if data contains only one sample
+
+
+### <ins>Post-filtering visualisations</ins>
+
+<ins>**Transcripts ranked**:</ins> (Left) Transcripts ranked according to their normalised expression (*NFLR*<sub>*T*</sub>) and coloured based on transcript category. (Right) If multiple samples are present: transcripts ranked showing the variation across the samples. The bar represents the mean expression across samples (*NFLR*<sub>*T*</sub>) and the error bars show the standard deviation.
+
+<p align="center">
+  <img src="test_output/Post_sqanti_qc/testData_postFilt_transcriptsRanked_main.png" width="300" height="250"/>
+  <img src="test_output/Post_sqanti_qc/testData_postFilt_transcriptsRanked_perSample.png" width="300" height="250"/> 
+</p>
+
+
+Additionally, transcript count and transcript expression are also plotted.
+
+<p align="center">
+  <img src="test_output/Post_sqanti_qc/testData_postFilt_tc_count_main.png" width="300" height="250"/>
+  <img src="test_output/Post_sqanti_qc/testData_postFilt_tc_count_perSample.png" width="300" height="250"/> 
+</p>
+
+<p align="center">
+  <img src="test_output/Post_sqanti_qc/testData_postFilt_tc_NFLR_main.png" width="300" height="250"/>
+  <img src="test_output/Post_sqanti_qc/testData_postFilt_tc_NFLR_perSample.png" width="300" height="250"/> 
+</p>
+
 
 ## Depedencies
 
