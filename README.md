@@ -38,7 +38,7 @@ Following transcript characterisation from SQANTI, PSQAN applies a set of filter
 
 Additionally, PSQAN also performs ORF prediction using the R package `ORFik`. However, these results are not used for transcript categorisation.
 
-### Normalisation
+### <ins>Normalisation</ins>
 
 Given a transcript *T* in sample *i* with *FLR* as the number of full-length reads mapped to the transcript *T*, PSQAN calculates the normalised full-length reads (*NFLR*<sub>*Ti*</sub>) as the percentage of total transcription in the sample:
 
