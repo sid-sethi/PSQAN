@@ -56,7 +56,7 @@ where, *NFLR*<sub>*T*</sub> represents the mean expression of transcript *T* acr
 
 ### Pre-filtering visualisations
 
-**Transcript count**: (Left) Number of transcripts detected (in at least one sample) grouped by transcript categories. (Right) If multiple samples are present: number of transcripts detected (on average across samples) grouped by transcript categories. The bar represents the mean across samples and the error bars show the standard deviation.
+<ins>**Transcript count**:</ins> (Left) Number of transcripts detected (in at least one sample) grouped by transcript categories. (Right) If multiple samples are present: number of transcripts detected (on average across samples) grouped by transcript categories. The bar represents the mean across samples and the error bars show the standard deviation.
 
 <p align="center">
   <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_count_main.png" width="300" height="250"/>
