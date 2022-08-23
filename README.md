@@ -43,13 +43,13 @@ Additionally, PSQAN also performs ORF prediction using the R package `ORFik`. Ho
 Given a transcript *T* in sample *i* with *FLR* as the number of full-length reads mapped to the transcript *T*, PSQAN calculates the normalised full-length reads (*NFLR*<sub>*Ti*</sub>) as the percentage of total transcription in the sample:
 
 <p align="center">
-  <img src="images/eq_1.jpg" width="500" height="100"/>  
+  <img src="images/eq_1.jpg" width="400" height="75"/>  
 </p>
 
 where, *NFLR*<sub>*Ti*</sub> represents the normalised full-length read count of transcript *T* in sample *i*, *FLR*<sub>*Ti*</sub> is the full-length read count of transcript *T* in sample *i* and *M* is the total number of transcripts identified to be associated with the gene after filtering. Finally, to summarise the expression of a transcript associated with a gene, we calculated the mean of normalised full-length reads (*NFLR*<sub>*Ti*</sub>) across all the samples:
 
 <p align="center">
-  <img src="images/eq_2.jpg" width="500" height="100"/>  
+  <img src="images/eq_2.jpg" width="400" height="75"/>  
 </p>
 
 where, *NFLR*<sub>*T*</sub> represents the mean expression of transcript *T* across all samples and *N* is the total number of samples.
