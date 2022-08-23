@@ -56,11 +56,18 @@ where, *NFLR*<sub>*T*</sub> represents the mean expression of transcript *T* acr
 
 ### Pre-filtering visualisations
 
-**Transcript categories**: (Left) Number of transcripts detected (in at least one sample) grouped by transcript categories. (Right) If multiple samples are present: number of transcripts detected (on average across samples) grouped by transcript categories. The bar represents the mean across samples and the error bars show the standard deviation.
+**Transcript count**: (Left) Number of transcripts detected (in at least one sample) grouped by transcript categories. (Right) If multiple samples are present: number of transcripts detected (on average across samples) grouped by transcript categories. The bar represents the mean across samples and the error bars show the standard deviation.
 
 <p align="center">
-  <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_count_main.png" width="250" height="200"/>
-  <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_count_perSample.png" width="250" height="200"/> 
+  <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_count_main.png" width="300" height="250"/>
+  <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_count_perSample.png" width="300" height="250"/> 
+</p>
+
+**Transcript expression**: (Left) Expression of transcripts in each transcript category. Each data point represents a transcript. *NFLR* here represents *NFLR*<sub>*T*</sub>. (Right) If multiple samples are present: expression of transcripts per sample. Each data point represents a sample. *NFLR* here represents *NFLR*<sub>*Ti*</sub>.
+
+<p align="center">
+  <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_NFLR_main.png" width="300" height="250"/>
+  <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_NFLR_perSample.png" width="300" height="250"/> 
 </p>
 
 
