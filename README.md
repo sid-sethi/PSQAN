@@ -61,11 +61,11 @@ where, *NFLR*<sub>*T*</sub> represents the mean expression of transcript *T* acr
 Number of transcripts detected (in at least one sample) grouped by transcript categories.
 
 <p align="center">
-  <img src="test_output/testData_preFilt_tc_count_main.png" width="300" height="75"/>  
+  <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_count_main.png" width="300" height="75"/>  
 </p>
 
 <p align="center">
-  <img src="test_output/testData_preFilt_tc_count_perSample.png" width="300" height="75"/>  
+  <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_count_perSample.png" width="300" height="75"/>  
 </p>
 
 ## Depedencies
