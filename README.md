@@ -54,7 +54,7 @@ where, *NFLR*<sub>*Ti*</sub> represents the normalised full-length read count of
 
 where, *NFLR*<sub>*T*</sub> represents the mean expression of transcript *T* across all samples and *N* is the total number of samples. In order to calculate accurate normalisation, it is recommended to use PSQAN to analyse a single gene.
 
-### Pre-filtering visualisations
+### <ins>Pre-filtering visualisations</ins>
 
 <ins>**Transcript count**:</ins> (Left) Number of transcripts detected (in at least one sample) grouped by transcript categories. (Right) If multiple samples are present: number of transcripts detected (on average across samples) grouped by transcript categories. The bar represents the mean across samples and the error bars show the standard deviation.
 
@@ -63,11 +63,18 @@ where, *NFLR*<sub>*T*</sub> represents the mean expression of transcript *T* acr
   <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_count_perSample.png" width="300" height="250"/> 
 </p>
 
-**Transcript expression**: (Left) Expression of transcripts in each transcript category. Each data point represents a transcript. *NFLR* here represents *NFLR*<sub>*T*</sub>. (Right) If multiple samples are present: expression of transcripts per sample. Each data point represents a sample. *NFLR* here represents *NFLR*<sub>*Ti*</sub>.
+<ins>**Transcript expression**:</ins> (Left) Expression of transcripts in each transcript category. Each data point represents a transcript. *NFLR* here represents *NFLR*<sub>*T*</sub>. (Right) If multiple samples are present: expression of transcripts per sample. Each data point represents a sample. *NFLR* here represents *NFLR*<sub>*Ti*</sub>.
 
 <p align="center">
   <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_NFLR_main.png" width="300" height="250"/>
   <img src="test_output/Post_sqanti_qc/testData_preFilt_tc_NFLR_perSample.png" width="300" height="250"/> 
+</p>
+
+<ins>**Transcript detected vs. expression**:</ins> (Left) Number of transcripts detected as a function of varying expression thresholds. If multiple samples are detected, the shaded area shows the standard deviation across the samples. (Right) If multiple samples are present: Number of transcripts detected in every sample as a function of varying expression thresholds. **These plots can be used to determine the minimum expression threshold to identify high-confidence transcripts**.
+
+<p align="center">
+  <img src="test_output/Post_sqanti_qc/testData_NFLR_curve_main.png" width="300" height="250"/>
+  <img src="test_output/Post_sqanti_qc/testData_NFLR_curve_perSample.png" width="300" height="250"/> 
 </p>
 
 
