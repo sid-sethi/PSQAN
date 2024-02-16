@@ -1,0 +1,1 @@
+| The plot shows the number of transcripts detected (on average across samples) grouped by transcript categories. The bar represents the mean across samples and the error bars show the standard deviation.

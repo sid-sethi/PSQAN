@@ -1,0 +1,344 @@
+import os
+from os import path
+import shutil
+import pandas as pd
+from snakemake.utils import validate
+from snakemake.utils import min_version
+
+min_version("5.3")
+
+
+# ----------------------------------------------------------------
+
+
+configfile: "config/config.yml"
+
+
+validate(config, schema="schemas/config_schema.yaml")
+
+
+workdir: config["workdir"]
+
+
+# get full path of working directory and snakemake directory
+WORKDIR = config["workdir"]
+SNAKEDIR = workflow.basedir
+
+
+df = pd.read_table(config["gene_ids"], delimiter="\t", dtype={"gene_id": str})
+validate(df, schema="schemas/genes_schema.yaml")
+genes = df["gene_id"].unique().tolist()
+
+# copy config into workdir to record a copy of parameters
+shutil.copy2(path.join(path.dirname(SNAKEDIR), "config/config.yml"), path.join(WORKDIR))
+
+
+report: "report/workflow.rst"
+
+
+# define output files
+plot_group = ["main", "perSample"] if config["multisample"] else ["main"]
+transcripts_detected_files = [f"{{geneid}}/NFLR_curve_{x}.png" for x in plot_group]
+tc_count_prefilt_files = [
+    f"{{geneid}}/pre_filtering/tc_count_{x}.png" for x in plot_group
+]
+tc_nflr_prefilt_files = [
+    f"{{geneid}}/pre_filtering/tc_NFLR_{x}.png" for x in plot_group
+]
+tc_count_postfilt_files = [
+    f"{{geneid}}/post_filtering/tc_count_{x}.png" for x in plot_group
+]
+tc_nflr_postfilt_files = [
+    f"{{geneid}}/post_filtering/tc_NFLR_{x}.png" for x in plot_group
+]
+rank_transcripts_files = [
+    f"{{geneid}}/post_filtering/transcriptsRanked_{x}.png" for x in plot_group
+]
+
+# ----------------------------------------------------------------
+
+
+rule all:
+    input:
+        expand("{geneid}/gene_normalised_abundance.txt", geneid=genes),
+        # # transcripts detected curves
+        expand("{geneid}/NFLR_curve_main.png", geneid=genes),
+        # transcript categories - pre filtering
+        expand("{geneid}/pre_filtering/tc_count_main.png", geneid=genes),
+        expand("{geneid}/pre_filtering/tc_NFLR_main.png", geneid=genes),
+        # filter transcripts
+        expand("{geneid}/filtered_transcripts.txt", geneid=genes),
+        # transcript categories - post filtering
+        expand("{geneid}/post_filtering/tc_count_main.png", geneid=genes),
+        expand("{geneid}/post_filtering/tc_NFLR_main.png", geneid=genes),
+        # rank transcripts
+        expand("{geneid}/post_filtering/transcriptsRanked_main.png", geneid=genes),
+
+
+rule normalise_gene_abundance:
+    input:
+        abundance=config["abundance"],
+    output:
+        res="{geneid}/gene_normalised_abundance.txt",
+    params:
+        respath="{geneid}",
+        gene_id="{geneid}",
+        abundance_type=config["abundance_type"],
+        percentage_As=config["percentage_A_downstream_TTS"],
+        script=path.join(SNAKEDIR, "scripts/normalise_gene_abundance.R"),
+        utils=path.join(SNAKEDIR, "scripts"),
+    log:
+        "{geneid}/logs/normalise_gene_abundance.log",
+    shell:
+        """
+        Rscript {params.script} -a {input.abundance} -o {params.respath} -g {params.gene_id} -l {log} --abundance_file_type {params.abundance_type} -p {params.percentage_As} -u {params.utils}
+        """
+
+
+rule transcripts_detected_curve:
+    input:
+        abundance="{geneid}/gene_normalised_abundance.txt",
+    output:
+        [
+            report(
+                transcripts_detected_files[0],
+                caption="report/NFLR_curve_main.rst",
+                category="Pre-filtering",
+                subcategory="Transcripts detected vs. expression",
+                labels={"Gene": "{geneid}", "Plot_type": "NFLR_curve_main"},
+            ),
+            report(
+                transcripts_detected_files[1],
+                caption="report/NFLR_curve_perSample.rst",
+                category="Pre-filtering",
+                subcategory="Transcripts detected vs. expression",
+                labels={"Gene": "{geneid}", "Plot_type": "NFLR_curve_perSample"},
+            ),
+        ]
+        if config["multisample"]
+        else [
+            report(
+                transcripts_detected_files[0],
+                caption="report/NFLR_curve_main.rst",
+                category="Pre-filtering",
+                subcategory="Transcripts detected vs. expression",
+                labels={"Gene": "{geneid}", "Plot_type": "NFLR_curve_perSample"},
+            )
+        ],
+    params:
+        respath="{geneid}",
+        script=path.join(SNAKEDIR, "scripts/transcripts_detected_curve.R"),
+        utils=path.join(SNAKEDIR, "scripts"),
+    log:
+        "{geneid}/logs/transcripts_detected_curve.log",
+    shell:
+        """
+        Rscript {params.script} -a {input.abundance} -o {params.respath} -l {log} -u {params.utils}
+        """
+
+
+rule prefiltered_transcript_categories:
+    input:
+        abundance="{geneid}/gene_normalised_abundance.txt",
+    output:
+        [
+            report(
+                tc_count_prefilt_files[0],
+                caption="report/tc_count_main.rst",
+                category="Pre-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "count_main"},
+            ),
+            report(
+                tc_count_prefilt_files[1],
+                caption="report/tc_count_perSample.rst",
+                category="Pre-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "count_perSample"},
+            ),
+        ]
+        if config["multisample"]
+        else [
+            report(
+                tc_count_prefilt_files[0],
+                caption="report/tc_count_main.rst",
+                category="Pre-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "count_main"},
+            )
+        ],
+        [
+            report(
+                tc_nflr_prefilt_files[0],
+                caption="report/tc_NFLR_main.rst",
+                category="Pre-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "NFLR_main"},
+            ),
+            report(
+                tc_nflr_prefilt_files[1],
+                caption="report/tc_NFLR_perSample.rst",
+                category="Pre-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "NFLR_perSample"},
+            ),
+        ]
+        if config["multisample"]
+        else [
+            report(
+                tc_nflr_prefilt_files[0],
+                caption="report/tc_NFLR_main.rst",
+                category="Pre-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "NFLR_main"},
+            )
+        ],
+    params:
+        respath="{geneid}/pre_filtering",
+        abundance_type=config["abundance_type"],
+        script=path.join(SNAKEDIR, "scripts/transcript_categories.R"),
+        utils=path.join(SNAKEDIR, "scripts"),
+    log:
+        "{geneid}/logs/prefiltered_transcript_categories.log",
+    shell:
+        """
+        Rscript {params.script} -a {input.abundance} -o {params.respath} -l {log} --abundance_file_type {params.abundance_type} -u {params.utils}
+        """
+
+
+rule filter_transcripts:
+    input:
+        abundance="{geneid}/gene_normalised_abundance.txt",
+    output:
+        res="{geneid}/filtered_transcripts.txt",
+    params:
+        NFLR_mean=config["min_exp_mean"],
+        NFLR_perSample=config["min_exp_perSample"],
+        min_sample_perc=config["min_sample_perc"],
+        respath="{geneid}",
+        script=path.join(SNAKEDIR, "scripts/filter_transcripts.R"),
+        utils=path.join(SNAKEDIR, "scripts"),
+    log:
+        "{geneid}/logs/filter_transcripts.log",
+    shell:
+        """
+        Rscript {params.script} -a {input.abundance} -o {params.respath} --NFLR_mean_thresh {params.NFLR_mean} --NFLR_perSample_thresh {params.NFLR_perSample} --min_sample_perc {params.min_sample_perc} -l {log} -u {params.utils}
+        """
+
+
+rule postfiltered_transcript_categories:
+    input:
+        abundance="{geneid}/filtered_transcripts.txt",
+    output:
+        [
+            report(
+                tc_count_postfilt_files[0],
+                caption="report/tc_count_main.rst",
+                category="Post-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "count_main"},
+            ),
+            report(
+                tc_count_postfilt_files[1],
+                caption="report/tc_count_perSample.rst",
+                category="Post-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "count_perSample"},
+            ),
+        ]
+        if config["multisample"]
+        else [
+            report(
+                tc_count_postfilt_files[0],
+                caption="report/tc_count_main.rst",
+                category="Post-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "count_main"},
+            )
+        ],
+        [
+            report(
+                tc_nflr_postfilt_files[0],
+                caption="report/tc_NFLR_main.rst",
+                category="Post-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "NFLR_main"},
+            ),
+            report(
+                tc_nflr_postfilt_files[1],
+                caption="report/tc_NFLR_perSample.rst",
+                category="Post-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "NFLR_perSample"},
+            ),
+        ]
+        if config["multisample"]
+        else [
+            report(
+                tc_nflr_postfilt_files[0],
+                caption="report/tc_NFLR_main.rst",
+                category="Post-filtering",
+                subcategory="Transcript categories",
+                labels={"Gene": "{geneid}", "Plot_type": "NFLR_main"},
+            )
+        ],
+    params:
+        respath="{geneid}/post_filtering",
+        abundance_type=config["abundance_type"],
+        script=path.join(SNAKEDIR, "scripts/transcript_categories.R"),
+        utils=path.join(SNAKEDIR, "scripts"),
+    log:
+        "{geneid}/logs/postfiltered_transcript_categories.log",
+    shell:
+        """
+        Rscript {params.script} -a {input.abundance} -o {params.respath} -l {log} --abundance_file_type {params.abundance_type} -u {params.utils}
+        """
+
+
+rule rank_transcripts:
+    input:
+        abundance="{geneid}/filtered_transcripts.txt",
+    output:
+        [
+            report(
+                rank_transcripts_files[0],
+                caption="report/transcriptsRanked_main.rst",
+                category="Post-filtering",
+                subcategory="Transcripts ranked",
+                labels={"Gene": "{geneid}", "Plot_type": "transcriptsRanked_main"},
+            ),
+            report(
+                rank_transcripts_files[1],
+                caption="report/transcriptsRanked_perSample.rst",
+                category="Post-filtering",
+                subcategory="Transcripts ranked",
+                labels={
+                    "Gene": "{geneid}",
+                    "Plot_type": "transcriptsRanked_perSample",
+                },
+            ),
+        ]
+        if config["multisample"]
+        else [
+            report(
+                rank_transcripts_files[0],
+                caption="report/transcriptsRanked_main.rst",
+                category="Post-filtering",
+                subcategory="Transcripts ranked",
+                labels={
+                    "Gene": "{geneid}",
+                    "Plot_type": "transcriptsRanked_perSample",
+                },
+            )
+        ],
+    params:
+        respath="{geneid}/post_filtering",
+        abundance_type=config["abundance_type"],
+        script=path.join(SNAKEDIR, "scripts/rank_transcripts.R"),
+        utils=path.join(SNAKEDIR, "scripts"),
+    log:
+        "{geneid}/logs/rank_transcripts.log",
+    shell:
+        """
+        Rscript {params.script} -a {input.abundance} -o {params.respath} -l {log} --abundance_file_type {params.abundance_type} -u {params.utils}
+        """
