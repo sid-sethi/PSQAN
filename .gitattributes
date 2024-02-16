@@ -1,4 +1,1 @@
-*.smk linguist-language=Python
-workflow/Snakefile linguist-language=Python
-.test/* linguist-vendored=false
-.test/report.html linguist-generated=true
+Snakefile linguist-language=Python
