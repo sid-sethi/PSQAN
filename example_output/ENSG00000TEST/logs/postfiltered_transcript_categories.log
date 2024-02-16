@@ -1,0 +1,8 @@
+2024-02-01 13:34:53.262901: File = ENSG00000TEST/filtered_transcripts.txt
+2024-02-01 13:34:53.263584: *--file succesfully validated !!
+2024-02-01 13:34:53.329482: Multiple samples detected - 38 samples
+2024-02-01 13:34:53.404153: plot per sample - number of unique transcripts in each transcript category
+2024-02-01 13:34:54.141109: plot per sample - expression of each transcript category
+2024-02-01 13:34:54.904868: plot across sample - number of unique transcripts in each transcript category
+2024-02-01 13:34:55.352999: plot across sample - expression of each transcript category
+2024-02-01 13:34:55.805179: All done !

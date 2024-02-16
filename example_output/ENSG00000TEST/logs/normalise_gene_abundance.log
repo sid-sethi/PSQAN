@@ -1,0 +1,6 @@
+2024-02-01 13:34:49.642372: File = ./tests/test_data/sqanti_classification_multiSample.txt
+2024-02-01 13:34:49.643148: *-- SQANTI file succesfully validated !!
+2024-02-01 13:34:49.646325: Adding PSQAN isoform categorisation
+2024-02-01 13:34:49.657271: Performing transcript abundence normalisation....
+2024-02-01 13:34:49.703731: Detected 38 samples in SQANTI file
+2024-02-01 13:34:49.747155: All done !
