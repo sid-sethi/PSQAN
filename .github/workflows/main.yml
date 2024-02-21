@@ -10,7 +10,7 @@ on:
 
 
 jobs:
-  Unit_tests:
+  Testing:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -29,6 +29,10 @@ jobs:
           activate-environment: psqan_venv
           environment-file: environment.yml
 
-      - name: run tests
+      - name: unit tests
         run: |
           Rscript tests/testthat.R
+
+      - name: snakemake
+        run: |
+          snakemake -j 5 all

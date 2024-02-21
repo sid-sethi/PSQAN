@@ -336,4 +336,3 @@ dependencies:
   - zipp=3.17.0=pyhd8ed1ab_0
   - zlib=1.2.13=hd590300_5
   - zstd=1.5.5=hfc55251_0
-prefix: /tmp_mnt/filer1/bioinformatics/Sid/SCRIPTS_2/PSQAN/psqan_venv
