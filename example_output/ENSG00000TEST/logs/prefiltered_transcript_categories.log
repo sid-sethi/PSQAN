@@ -1,0 +1,8 @@
+2024-02-01 13:34:51.563714: File = ENSG00000TEST/gene_normalised_abundance.txt
+2024-02-01 13:34:51.564346: *--file succesfully validated !!
+2024-02-01 13:34:51.622649: Multiple samples detected - 38 samples
+2024-02-01 13:34:51.693228: plot per sample - number of unique transcripts in each transcript category
+2024-02-01 13:34:52.445081: plot per sample - expression of each transcript category
+2024-02-01 13:34:53.415762: plot across sample - number of unique transcripts in each transcript category
+2024-02-01 13:34:53.901521: plot across sample - expression of each transcript category
+2024-02-01 13:34:54.463696: All done !

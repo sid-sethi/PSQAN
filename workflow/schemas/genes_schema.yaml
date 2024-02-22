@@ -1,0 +1,11 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: Gene Ids file
+
+properties:
+  gene_id:
+    type: string
+    minLength: 1
+
+required:
+  - gene_id

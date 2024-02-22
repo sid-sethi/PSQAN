@@ -1,0 +1,56 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: PSQAN configuration file
+
+properties:
+  workdir:
+    type: string
+    minLength: 1
+
+  abundance_type:
+    type: string
+    enum: ["SQANTI", "TALON"]
+    minLength: 1
+    default: "SQANTI"
+
+  abundance:
+    type: string
+    minLength: 1
+
+  gene_ids:
+    type: string
+    minLength: 1
+
+  multisample:
+    type: boolean
+    default: False
+
+  percentage_A_downstream_TTS:
+    type: number
+    default: 80
+    minimum: 0
+    maximum: 100
+  
+  min_exp_mean:
+    type: number
+    default: 0
+    minimum: 0
+    maximum: 100
+
+  min_exp_perSample:
+    type: number
+    default: 0.3
+    minimum: 0
+    maximum: 100
+
+  min_sample_perc:
+    type: number
+    default: 0
+    minimum: 0
+    maximum: 100
+
+
+required:
+  - workdir
+  - abundance
+  - gene_ids

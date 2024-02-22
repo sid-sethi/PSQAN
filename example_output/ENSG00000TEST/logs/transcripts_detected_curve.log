@@ -1,0 +1,8 @@
+2024-02-01 13:34:51.544921: File = ENSG00000TEST/gene_normalised_abundance.txt
+2024-02-01 13:34:51.545568: *--file succesfully validated !!
+2024-02-01 13:34:51.620512: Extracting NFLR values
+2024-02-01 13:34:51.621003: calculating number of unique transcripts at every NFLR value
+2024-02-01 13:34:53.030466: Multiple samples detected - 38 samples
+2024-02-01 13:34:53.030815: plotting - transcripts detected vs. NFLR_mean (mean NFLR across all samples)
+2024-02-01 13:34:53.698497: plotting - transcripts detected vs. NFLR per sample
+2024-02-01 13:34:55.127757: All done !

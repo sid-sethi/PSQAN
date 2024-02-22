@@ -1,0 +1,6 @@
+2024-02-01 13:34:53.259802: File = ENSG00000TEST/filtered_transcripts.txt
+2024-02-01 13:34:53.260545: *--file succesfully validated !!
+2024-02-01 13:34:53.305464: Multiple samples detected - 38 samples
+2024-02-01 13:34:53.405353: plotting ranked transcripts with sd across samples as error bars
+2024-02-01 13:34:54.433477: plotting ranked transcripts without error bars
+2024-02-01 13:34:54.993501: All done !
