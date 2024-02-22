@@ -35,4 +35,4 @@ jobs:
 
       - name: snakemake
         run: |
-          snakemake -j 5 all
+          snakemake --show-failed-logs --directory . -j 5 all

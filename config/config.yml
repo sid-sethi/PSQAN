@@ -4,11 +4,11 @@
 # In case you wish to use the dafault value of a parameter, you should comment out that parameter using a "#"
 
 ##** workdir [STRING] [REQUIRED] | Path of working/project directory. This directory should exist. All PSQAN results would be saved within this directory
-workdir: "./example_output"
+workdir: "output"
 
 
 ##** abundance [FILE] [REQUIRED] | Transcript abundance file. Abundance output file from `SQANTI` and `TALON` are accepted by PSQAN. For SQANTI, the file ending with "classification.txt" should be provided, while for TALON, read annotation file ending with "read_annot.tsv" should be used
-abundance: "./tests/test_data/sqanti_classification_multiSample.txt"
+abundance: "tests/test_data/sqanti_classification_multiSample.txt"
 
 
 ##** abundance_type [STRING] | File type of transcript abundance input file. Accepted choices: ["SQANTI", "TALON"]; [default = "SQANTI"]
@@ -16,7 +16,7 @@ abundance_type: "SQANTI"
 
 
 ##** gene_ids [FILE] [REQUIRED] | A file containing Gene IDs of genes of interest to run PSQAN. Gene IDs column name should be "gene_id". If the file contains more than one column, it should be a tab-seperated file - other columns in the file will be ignored
-gene_ids: "./tests/test_data/sqanti_genes.txt"
+gene_ids: "tests/test_data/sqanti_genes.txt"
 
 
 ##** percentage_A_downstream_TTS [NUMERIC] [0-100] | Maximum percent of genomic "A"s allowed in the immediate downstream window of the read/isoform. This helps to filter out internal priming artifacts. If percent of genomic "A"s is high (say > 80), the 3' end site of the isoform is probably not reliable. If using `TALON` abundance file, this percentage is divided by 100 to convert into a fraction. [default = 80]
