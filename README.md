@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![Snakemake](https://img.shields.io/badge/snakemake-≥6.1.0-brightgreen.svg)](https://snakemake.github.io)
 [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/sid-sethi/PSQAN/blob/main/LICENSE)
-[![Tests](https://github.com/sid-sethi/PSQAN/actions/workflows/main.yml/badge.svg?branch=dev)](https://github.com/sid-sethi/PSQAN/actions/workflows/main.yml)
+[![Tests](https://github.com/sid-sethi/PSQAN/actions/workflows/main.yml/badge.svg)](https://github.com/sid-sethi/PSQAN/actions/workflows/main.yml)
 <!-- badges: end -->
 
 <img align="left" src="images/psqan_model.png" width="350" height="700"/>
