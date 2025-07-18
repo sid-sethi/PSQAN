@@ -24,7 +24,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           mamba-version: "*"
-          channels: conda-forge,bioconda,defaults
+          channels: conda-forge,bioconda
           auto-activate-base: false
           activate-environment: psqan_venv
           environment-file: environment.yml
