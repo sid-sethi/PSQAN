@@ -1,2 +1,3 @@
 .snakemake/
 psqan_venv/
+base_env.yml

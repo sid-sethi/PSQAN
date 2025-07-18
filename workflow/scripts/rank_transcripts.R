@@ -79,6 +79,11 @@ if(opt$abundance_file_type == "SQANTI"){
 #### Transcripts (ranked) vs. NFLR ######
 res <- .rank_transcripts(x.gene)
 
+#### write to file ###
+file_output <- res$x.ranked
+file_output$Isoform_class <- stringr::str_replace(file_output$Isoform_class, "\n", "")
+write.table(file_output, str_c(opt$outpath, "/transcriptsRanked.txt"), col.names = TRUE, row.names=FALSE, sep="\t", quote = FALSE)
+
 # ggplot plotting theme parameters
 mytheme <- theme_bw()  +
   theme(plot.title = element_text(lineheight=.4, size=12, hjust=0.5),
