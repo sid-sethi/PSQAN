@@ -73,6 +73,7 @@ rule all:
         expand("{geneid}/post_filtering/tc_NFLR_main.png", geneid=genes),
         # rank transcripts
         expand("{geneid}/post_filtering/transcriptsRanked_main.png", geneid=genes),
+        expand("{geneid}/post_filtering/transcriptsRanked.txt", geneid=genes),
 
 
 rule normalise_gene_abundance:
@@ -331,6 +332,7 @@ rule rank_transcripts:
                 },
             )
         ],
+        res="{geneid}/post_filtering/transcriptsRanked.txt",
     params:
         respath="{geneid}/post_filtering",
         abundance_type=config["abundance_type"],
