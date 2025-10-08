@@ -30,7 +30,6 @@ jobs:
           auto-activate-base: false
           activate-environment: psqan_venv
           environment-file: environment.yml
-          conda-remove-defaults: "true"
 
       - name: unit tests
         run: |
