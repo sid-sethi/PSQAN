@@ -31,7 +31,7 @@
 - [Licence](#licence)
 
 ## Overview
-<img src="images/figure_for_github.png" width="800" height="700"/>  
+<img src="images/figure_for_github.png" width="870" height="750"/>  
 
 ## Introduction
 Despite the advances in tools to process long-read RNA-sequencing (lrRNA-seq) data, the downstream analysis of transcriptional data remains challenging due to the detection of thousands of novel transcripts and the lack of tools to prioritise functionally important transcripts. From such a large number of transcripts, it is difficult to distinguish between stable transcripts of potential biological importance, partially processed RNAs and splicing noise. Furthermore, when using lrRNA-seq to identify rare and novel transcripts, the recommendation is to incorporate multiple replicates in the study design and implement transcript-level filters. However, determining optimal expression thresholds for filtering and selecting transcripts which are reproducible across samples remains a significant challenge. Consequently, researchers find it challenging to interpret lrRNA-seq data effectively and generate relevant hypothesis which could be experimentally validated in the laboratory.

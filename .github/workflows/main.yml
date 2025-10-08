@@ -25,6 +25,8 @@ jobs:
         with:
           mamba-version: "*"
           channels: conda-forge,bioconda
+          channel-priority: strict
+          conda-remove-defaults: true
           auto-activate-base: false
           activate-environment: psqan_venv
           environment-file: environment.yml
