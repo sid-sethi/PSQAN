@@ -29,9 +29,12 @@
       - [Ranked transcripts](#ranked-transcripts)
 - [Other useful commands](#other-useful-commands)
 - [Licence](#licence)
+- [Citing PSQAN](#citing-psqan)
 
 ## Overview
 <img src="images/figure_for_github.png" width="870" height="750"/>  
+
+> **_Publication:_** *Bioinformatics Advances (2025)*. DOI: https://doi.org/10.1093/bioadv/vbaf293
 
 ## Introduction
 Despite the advances in tools to process long-read RNA-sequencing (lrRNA-seq) data, the downstream analysis of transcriptional data remains challenging due to the detection of thousands of novel transcripts and the lack of tools to prioritise functionally important transcripts. From such a large number of transcripts, it is difficult to distinguish between stable transcripts of potential biological importance, partially processed RNAs and splicing noise. Furthermore, when using lrRNA-seq to identify rare and novel transcripts, the recommendation is to incorporate multiple replicates in the study design and implement transcript-level filters. However, determining optimal expression thresholds for filtering and selecting transcripts which are reproducible across samples remains a significant challenge. Consequently, researchers find it challenging to interpret lrRNA-seq data effectively and generate relevant hypothesis which could be experimentally validated in the laboratory.
@@ -238,3 +241,8 @@ Copyright 2024 Astex Therapeutics Ltd.
 This repository is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
 This repository is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE](LICENSE) file (GNU General Public License) for more details.
+
+## Citing PSQAN
+If you use PSQAN in your research, please cite the following publication: https://doi.org/10.1093/bioadv/vbaf293
+
+Siddharth Sethi, Emil K Gustavsson, Harpreet Saini, Mina Ryten, PSQAN: a pipeline to prioritize novel and biologically relevant transcripts from long-read RNA sequencing, Bioinformatics Advances, Volume 5, Issue 1, 2025, vbaf293, https://doi.org/10.1093/bioadv/vbaf293
